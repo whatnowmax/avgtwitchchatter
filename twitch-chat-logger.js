@@ -14,12 +14,12 @@ const botName = process.argv[2];
 const chName = process.argv[3];
 
 if (!botName) {
-	console.error("Error: No bot name provided. Usage: node twitch-chat-logger.js <botName> <channel name>");
+    console.error("Error: No bot name provided. Usage: node twitch-chat-logger.js <botName> <channel name>");
     process.exit(1);
 }
 
 if (!chName) {
-	console.error("Error: No channel name provided. Usage: node twitch-chat-logger.js <botName> <channel name>");
+    console.error("Error: No channel name provided. Usage: node twitch-chat-logger.js <botName> <channel name>");
     process.exit(1);
 }
 
@@ -108,7 +108,7 @@ client.on('message', (channel, tags, message, self) => {
     if (self) return; // Ignore messages from the bot itself
 
     const username = tags['display-name'].toLowerCase();
-	const userType = tags['badges'] || {}; // Check user badges
+    const userType = tags['badges'] || {}; // Check user badges
 
     const isBroadcaster = userType.broadcaster === '1';
     const isModerator = userType.moderator === '1';
@@ -121,7 +121,7 @@ client.on('message', (channel, tags, message, self) => {
             console.log(`${username} opted in.`);
             client.say(channel, `Thank you for opting in, ${username}!`);
         } else {
-            client.say(channel, `${username}, you already opted in, dickbutt!`);
+            client.say(channel, `${username}, you already opted in!`);
         }
         return;
     }
@@ -155,7 +155,7 @@ client.on('message', (channel, tags, message, self) => {
             }
 
             if (bannedTerms.includes(termToBan)) {
-                client.say(channel, `@${username}, "${termToBan}" is already banned, dickbutt.`);
+                client.say(channel, `@${username}, "${termToBan}" is already banned.`);
                 return;
             }
 
@@ -163,16 +163,16 @@ client.on('message', (channel, tags, message, self) => {
             bannedTerms.push(termToBan);
             fs.appendFileSync(bannedTermsFile, termToBan + '\n', 'utf-8');
 
-            client.say(channel, `@${username}, the term "${termToBan}" has been banned. 1984. Last ${termToBan} spam o7 o7 o7`);
+            client.say(channel, `@${username}, the term "${termToBan}" has been banned.`);
             console.log(`Banned term added: ${termToBan}`);
         } else {
             client.say(channel, `@${username}, you do not have permission to use !banterm. SADGE`);
         }
     }
-	
-	// Handle !unbanterm
+
+    // Handle !unbanterm
     if (message.startsWith('!unbanterm ')) {
-		console.log("unban term detected");
+        console.log("unban term detected");
         if (isBroadcaster || isModerator) {
             const termToUnban = message.split(' ')[1].toLowerCase(); // Extract the word
 
@@ -192,15 +192,15 @@ client.on('message', (channel, tags, message, self) => {
             bannedTerms.splice(index, 1);
             fs.writeFileSync(bannedTermsFile, bannedTerms.join('\n') + '\n', 'utf-8');
 
-            client.say(channel, `@${username}, the term "${termToUnban}" has been unbanned. 1985`);
+            client.say(channel, `@${username}, the term "${termToUnban}" has been unbanned.`);
             console.log(`Unbanned term: ${termToUnban}`);
         } else {
             client.say(channel, `@${username}, you do not have permission to use !unbanterm.`);
         }
     }
-	
 
-     // Log message if user is opted in
+
+    // Log message if user is opted in
     if (optedInUsers.includes(username.toLowerCase())) {
 
         logMessage(username, message);
